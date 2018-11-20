@@ -15,15 +15,20 @@ import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
-// JPanel
-// ListSelectionListener
+// Создать панель с элементами, которые будут менятся в зависимости от изменения списка list
 public class WindowElements extends JPanel implements ListSelectionListener {
+
+    // Список отвечает за отображение списка пользователей в окне программы
     private JList<User> list;
+
+    // Поле класса ответчает за управление содержимым
     private DefaultListModel<User> listModel;
 
+    // Текстовое поле, в которое вводится имя
     private JTextField nameField;
+    // Текстовое поле, в которое вводится дата
     private JTextField birthDayField;
-
+    // Менеджер по управлению пользователями
     private IUserManager userManager;
 
     public WindowElements(IUserManager userManager) {
