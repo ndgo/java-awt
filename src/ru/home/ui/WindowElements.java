@@ -32,6 +32,7 @@ public class WindowElements extends JPanel implements ListSelectionListener {
     private IUserManager userManager;
 
     public WindowElements(IUserManager userManager) {
+        // сделать так чтобы элементы не располагались в одну линию
         super(new BorderLayout());
 
         this.userManager = userManager;
