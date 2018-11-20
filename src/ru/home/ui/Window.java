@@ -5,27 +5,25 @@ import ru.home.manger.IUserManager;
 import javax.swing.*;
 import java.awt.*;
 
+// окно программы
 public class Window extends JFrame {
 
+    // создание окна программы
     public Window(IUserManager userManager) throws HeadlessException {
+        // при закрытии окна завершать программу
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        //Create and set up the content pane.
+        // заполнение окна кнопками и элементами
         JComponent newContentPane = new WindowElements(userManager);
-        newContentPane.setOpaque(true); //content panes must be opaque
+
+        // сохраняем содежимое окна в
         this.setContentPane(newContentPane);
 
-        //Don't let the content pane get too small.
-        //(Works if the Java look and feel provides
-        //the window decorations.)
-        newContentPane.setMinimumSize(
-                new Dimension(
-                        newContentPane.getPreferredSize().width,
-                        100));
-
-        //Display the window.
+        //окно должно занимать столько места, сколько требуют элементы окна
         this.pack();
+        // окно должно быть видимым
         this.setVisible(true);
+        // окно не должно уметь менять размер
         this.setResizable(false);
     }
 }
