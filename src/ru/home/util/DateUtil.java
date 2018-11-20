@@ -8,15 +8,6 @@ import java.util.Date;
 
 public class DateUtil {
 
-    public static Date currentDate() {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(new Date());
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
-        return calendar.getTime();
-    }
-
-
     public static Date rollDays(Date date, int days) {
         return roll(date, Calendar.DAY_OF_YEAR, days);
     }
@@ -39,7 +30,7 @@ public class DateUtil {
     }
 
     public static String dateFormatExample() {
-        return dateFormat().format(currentDate());
+        return dateFormat().format(new Date());
     }
 
     public static SimpleDateFormat dateFormat() {

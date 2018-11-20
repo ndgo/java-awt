@@ -16,19 +16,19 @@ public class UserManagerImpl implements IUserManager {
 
     public UserManagerImpl() {
 
-        Date current = DateUtil.currentDate();
+        Date current = new Date();
 
         save("Whistler", DateUtil.rollDays(current, -1));
-//        save("Jackson Hole", DateUtil.rollDays(current, -2));
-//        save("Squaw Valley", DateUtil.rollDays(current, -3));
-//        save("Telluride", DateUtil.rollDays(current, -4));
-//        save("Taos", DateUtil.rollDays(current, -5));
-//        save("Snowbird", DateUtil.rollDays(current, -6));
-//        save("Chamonix", DateUtil.rollDays(current, -7));
-//        save("Banff", DateUtil.rollDays(current, -8));
-//        save("Arapahoe Basin", DateUtil.rollDays(current, -9));
-//        save("Kirkwood", DateUtil.rollDays(current, -10));
-//        save("Sun Valley", DateUtil.rollDays(current, -11));
+        save("Jackson Hole", DateUtil.rollDays(current, -2));
+        save("Squaw Valley", DateUtil.rollDays(current, -3));
+        save("Telluride", DateUtil.rollDays(current, -4));
+        save("Taos", DateUtil.rollDays(current, -5));
+        save("Snowbird", DateUtil.rollDays(current, -6));
+        save("Chamonix", DateUtil.rollDays(current, -7));
+        save("Banff", DateUtil.rollDays(current, -8));
+        save("Arapahoe Basin", DateUtil.rollDays(current, -9));
+        save("Kirkwood", DateUtil.rollDays(current, -10));
+        save("Sun Valley", DateUtil.rollDays(current, -11));
     }
 
     @Override
