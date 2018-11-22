@@ -17,13 +17,12 @@ import java.util.List;
 
 
 public class WindowElements // Создать панель с элементами, которые будут менятся в зависимости от изменения списка list
-        extends JPanel // Стандартная панель, на который мы добавляем элементы управления программой
-        implements ListSelectionListener { //
+        extends JPanel { // Стандартная панель, на который мы добавляем элементы управления программой
 
     // Список отвечает за отображение списка пользователей в окне программы
     private JList<User> list;
 
-    // Поле класса ответчает за управление содержимым
+    // Поле класса ответчает за управление содержимым списка
     private DefaultListModel<User> listModel;
 
     // Текстовое поле, в которое вводится имя
@@ -52,21 +51,40 @@ public class WindowElements // Создать панель с элементам
     }
 
     private Component createListPanel(IUserManager userManager) {
-        //Create and populate the list model.
+        // Создаем структуру для управления содержимом списка в пользовательском интерфейсе
         listModel = new DefaultListModel<>();
 
-
+        // Получаем список предопределенных пользователей
         List<User> users = userManager.getAll();
 
+        // Сохраняем пользователя в список
         for (User user : users) {
+            // Добавляем пользователя в структуру управления списком для отображения на UI
             listModel.addElement(user);
         }
 
-        //Create the list and put it in a scroll pane.
+        // Создаем список, передавая в него структуру управления списком
         list = new JList<>(listModel);
+        // Можно выделять только одну строчку
         list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        // По умолчанию выбираем первый элемент в списке
         list.setSelectedIndex(0);
-        list.addListSelectionListener(this);
+        // Добавлен слушатель события изменения списка для того чтобы заполнять текстовые поля, когда
+        // мы кликаем левой кнопкой мыши на строчке списка
+        list.addListSelectionListener(new ListSelectionListener() {
+
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                // устанавливаем поля, когда мы действительно выбираем элемент списка.
+                // Бывают события, когда список меняется, но выбранное значение в списке равно -1, то есть ни один элемент списка не выбран
+                if (list.getSelectedIndex() != -1) {
+                    nameField.setText(list.getSelectedValue().getName());
+                    birthDayField.setText(DateUtil.toString(list.getSelectedValue().getBirthDay()));
+                }
+            }
+        });
+
+        // Список должен быть со скролом тк элементов в нем будет много
         return new JScrollPane(list);
     }
 
@@ -228,15 +246,6 @@ public class WindowElements // Создать панель с элементам
             }
             listModel.addElement(userManager.save(name, birthDate));
             list.setSelectedIndex(size);
-        }
-    }
-
-    //Listener method for list selection changes.
-    public void valueChanged(ListSelectionEvent e) {
-        if (list.getSelectedIndex() != -1) {
-            //Single selection: permit all operations.
-            nameField.setText(list.getSelectedValue().getName());
-            birthDayField.setText(DateUtil.toString(list.getSelectedValue().getBirthDay()));
         }
     }
 }
