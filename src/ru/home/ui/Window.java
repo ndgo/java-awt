@@ -9,7 +9,7 @@ import java.awt.*;
 public class Window extends JFrame {
 
     // создание окна программы
-    public Window(IUserManager userManager) throws HeadlessException {
+    public Window(IUserManager userManager) {
         // при закрытии окна завершать программу
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 

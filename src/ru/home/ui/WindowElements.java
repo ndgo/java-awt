@@ -15,8 +15,10 @@ import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
-// Создать панель с элементами, которые будут менятся в зависимости от изменения списка list
-public class WindowElements extends JPanel implements ListSelectionListener {
+
+public class WindowElements // Создать панель с элементами, которые будут менятся в зависимости от изменения списка list
+        extends JPanel // Стандартная панель, на который мы добавляем элементы управления программой
+        implements ListSelectionListener { //
 
     // Список отвечает за отображение списка пользователей в окне программы
     private JList<User> list;
@@ -31,16 +33,21 @@ public class WindowElements extends JPanel implements ListSelectionListener {
     // Менеджер по управлению пользователями
     private IUserManager userManager;
 
+    // Конструктор, который принимает менеджер по работе с пользователями
     public WindowElements(IUserManager userManager) {
         // сделать так чтобы элементы не располагались в одну линию
         super(new BorderLayout());
 
         this.userManager = userManager;
 
+        // Создаем список и заполняем его
         Component listPanel = createListPanel(userManager);
+        // Создаем панель с кнопками и текстовыми полями ввода
         Component upperPanel = createUpperPanel();
 
+        // Добавляем панель с кнопками и текстовыми полями на нашу основную панель
         add(upperPanel, BorderLayout.PAGE_START);
+        // Добавляем список на нашу основную панель
         add(listPanel, BorderLayout.CENTER);
     }
 
