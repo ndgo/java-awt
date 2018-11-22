@@ -132,8 +132,6 @@ public class WindowElements // Создать панель с элементам
 
             User element = listModel.getElementAt(selectedIndex);
 
-//            nameField.setText(element.getName());
-//            birthDayField.setText(DateUtil.toString(element.getBirthDay()));
             userManager.delete(element.getId());
 
 
@@ -230,10 +228,6 @@ public class WindowElements // Создать панель с элементам
             }
             listModel.addElement(userManager.save(name, birthDate));
             list.setSelectedIndex(size);
-
-
-            //Otherwise insert the new one after the current selection,
-            //and select new one.
         }
     }
 
