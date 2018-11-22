@@ -272,6 +272,7 @@ public class WindowElements // Создать панель с элементам
                 return;
             }
 
+            // получаем значение текстового поля ИМЯ
             String name = nameField.getText();
 
             Date birthDate;
