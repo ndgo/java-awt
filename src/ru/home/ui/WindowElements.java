@@ -190,9 +190,14 @@ public class WindowElements // Создать панель с элементам
     public class ShowAllButtonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
+            // очищаем список элементов на UI
             listModel.clear();
 
-            for (User user : userManager.getAll()) {
+            // Получаем список всех пользователей
+            List<User> userList = userManager.getAll();
+
+            // Перебираем каждого пользователя и сохраняем его в cтруктуру, отвечающую за отображение списка на UI
+            for (User user : userList) {
                 listModel.addElement(user);
             }
 
@@ -202,35 +207,55 @@ public class WindowElements // Создать панель с элементам
     }
 
 
+    // Обработчик нажатия на кнопку поиска по имени
+    // вызываем (вызываем метод actionPerformed(), когда хотим найти всех пользователей, чье имя совпадает со значением
+    // текстового поля имя пользователя
     public class SearchByNameButtonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
+
+            // очищаем список элементов на UI
             listModel.clear();
 
-            for (User user : userManager.searchByName(nameField.getText())) {
+            // получаем значение текстового поля ИМЯ
+            String name = nameField.getText();
+
+            // Получаем из хранилища список пользователей, чье имя совпадает с искомым
+            List<User> users = userManager.searchByName(name);
+
+            // Добавляем список пользователей в структуру, отвечающую за отображение списка на UI
+            for (User user : users) {
+                // Добавляем по 1 пользователю в структуру, отвечающую за отображение списка на UI
                 listModel.addElement(user);
             }
 
+            // по умолчанию выделяем первый элмент списка, из тех пользователей что были найдены
             list.setSelectedIndex(0);
         }
     }
 
-
+    // Обработчик нажатия на кнопку поиска по дате
     public class SearchByBirthDateButtonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
 
-            Date moment;
+            Date date;
             try {
-                moment = DateUtil.toDate(birthDayField.getText());
+                // Получаем текстовое значения поля - дата рождения
+                String dateString = birthDayField.getText();
+                //  Преобразуем текстовое значение из формата ДД.ММ.ГГГГ в объект с типом Date
+                date = DateUtil.toDate(dateString);
             } catch (ParseException exc) {
+                // если не получилось преобразовать поле дата к реальной дате то показывается подсказка:
+                // "Ожидаемый формат даты: 01.01.2018. Полученный формат даты 001.01.2018
                 JOptionPane.showMessageDialog(new Frame(), MessageFormat.format("Ожидаемый формат даты: {0}. Полученный формат даты: {1}", DateUtil.dateFormatExample(), birthDayField.getText()));
+                // Если не смогли распознать дату, то поиск не производится. Список пользователей не очищается
                 return;
             }
 
             listModel.clear();
 
-            for (User user : userManager.searchByDate(moment)) {
+            for (User user : userManager.searchByDate(date)) {
                 listModel.addElement(user);
             }
 
@@ -257,6 +282,7 @@ public class WindowElements // Создать панель с элементам
                 // если не получилось преобразовать поле дата к реальной дате то показывается подсказка:
                 // "Ожидаемый формат даты: 01.01.2018. Полученный формат даты 001.01.2018
                 JOptionPane.showMessageDialog(new Frame(), MessageFormat.format("Ожидаемый формат даты: {0}. Полученный формат даты: {1}", DateUtil.dateFormatExample(), birthDayField.getText()));
+                // Если не смогли распознать дату, то добавление пользователя не производится
                 return;
             }
 
