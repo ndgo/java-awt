@@ -89,39 +89,47 @@ public class WindowElements // Создать панель с элементам
     }
 
     private Component createUpperPanel() {
-        //Create the list-modifying buttons.
         JButton addButton = new JButton("Добавить");
+        // Создаем обработчик события нажатия на кнопку добавления пользователя в список
         addButton.addActionListener(new AddButtonListener());
 
         JButton deleteButton = new JButton("Удалить");
+        // Создаем обработчик события нажатия на кнопку удаления пользователя в список
         deleteButton.addActionListener(new DeleteButtonListener());
 
         JButton searchByNameButton = new JButton("Найти по имени");
+        // Создаем обработчик события нажатия на кнопку поиск пользователя по имени
         searchByNameButton.addActionListener(new SearchByNameButtonListener());
 
         JButton searchByBirthDateButton = new JButton("Найти по дате");
+        // Создаем обработчик события нажатия на кнопку поиск пользователя по дате
         searchByBirthDateButton.addActionListener(new SearchByBirthDateButtonListener());
 
         JButton showAllButton = new JButton("Показать все");
+        // Создаем обработчик события нажатия на кнопку отображения всех пользователей
         showAllButton.addActionListener(new ShowAllButtonListener());
 
-        //Create the text field for entering new names.
+        // создаем текстовое поле Имя, дли поля 15 символов
         nameField = new JTextField(15);
-        nameField.addActionListener(new AddButtonListener());
 
-        if (list.getSelectedIndex() != -1) {
-            String name = listModel.getElementAt(list.getSelectedIndex()).getName();
+        // Если список с пользователями не пустой, устанавливаем дефолтное значение текстового поля имя именем первого пользователя
+        if (!listModel.isEmpty()) {
+            String name = listModel.getElementAt(0).getName();
             nameField.setText(name);
         }
 
+        // создаем текстовое поле дата. Дата может корректно обрабатываться,
+        // только если в текстовое поле будет введена строка в формате ДД.ММ.ГГГГ
         birthDayField = new JFormattedTextField(DateUtil.dateFormat());
+        // длина тестовой даты 10 символов
         birthDayField.setColumns(10);
-        if (list.getSelectedIndex() != -1) {
-            String date = DateUtil.toString(listModel.getElementAt(list.getSelectedIndex()).getBirthDay());
+        // Если список с пользователями не пустой, устанавливаем дефолтное значение текстового поля дата датой раждения первого отображенного пользователя в списке
+        if (!listModel.isEmpty()) {
+            String date = DateUtil.toString(listModel.getElementAt(0).getBirthDay());
             birthDayField.setText(date);
         }
 
-        //Create a control panel, using the default FlowLayout.
+        // Создаем панель-контейнер для хранения кнопок на UI
         JPanel buttonPane = new JPanel();
         buttonPane.add(nameField);
         buttonPane.add(birthDayField);
@@ -133,38 +141,43 @@ public class WindowElements // Создать панель с элементам
         return buttonPane;
     }
 
+    // обработчик нажатия на кнопку удалить
+    // вызываем (вызываем метод actionPerformed(), когда нажимаем кнопку удаления пользователя
     class DeleteButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            /*
-             * This method can be called only if
-             * there's a valid selection,
-             * so go ahead and remove whatever's selected.
-             */
-
+            // получить индекс удаляемого пользователя в массиве пользователей, отображенных на данный момент на UI
             int selectedIndex = list.getSelectedIndex();
 
+            // если мы не выбрали ни одного пользователя, но нажали кнопку удаления пользователя, то показывается сообщение
+            // "Ни один элемент для удаления не выбран"
             if (selectedIndex == -1) {
                 JOptionPane.showMessageDialog(new Frame(), "Ни один элемент для удаления не выбран");
                 return;
             }
 
+            // Получаем удаляемого пользователя
             User element = listModel.getElementAt(selectedIndex);
 
+            // Удаляем пользователя из хранилища
             userManager.delete(element.getId());
 
-
+            // Сохраняем индекс пользователя в отобраемом списке на UI, который был удален из хранилища
             int indexToDelete = selectedIndex;
 
+            // удаление пользователя в из списка на UI
             listModel.remove(indexToDelete);
 
-            //Adjust the selection.
+            // Если был выбран последний пользователь, то после удаления 1 последнего пользователя надо выбрать в списке предпоследнего пользователя
             if (selectedIndex == listModel.getSize()) {
-                //Removed item in last position.
                 selectedIndex--;
             }
 
+            // после удаления выделим элемент списка.
+            // если selectedIndex равен -1, то выделения не происходит
+            // если selectedIndex больше размера списка, то выделения не происходит
             list.setSelectedIndex(selectedIndex);
 
+            // если выделен элемент списка, устанавливаем имя пользователя и дату рождения пользователя в соответствующих текстовых полях
             if (selectedIndex != -1) {
                 nameField.setText(list.getSelectedValue().getName());
                 birthDayField.setText(DateUtil.toString(list.getSelectedValue().getBirthDay()));
@@ -172,6 +185,8 @@ public class WindowElements // Создать панель с элементам
         }
     }
 
+    // обработчик нажатия на кнопку отображения всего списка пользователей
+    // вызываем (вызываем метод actionPerformed(), когда нажимаем кнопку отображения всех пользователей
     public class ShowAllButtonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -181,6 +196,7 @@ public class WindowElements // Создать панель с элементам
                 listModel.addElement(user);
             }
 
+            // если selectedIndex больше размера списка, то выделения не происходит
             list.setSelectedIndex(0);
         }
     }
@@ -222,30 +238,33 @@ public class WindowElements // Создать панель с элементам
         }
     }
 
-    /**
-     * A listener shared by the text field and add button.
-     */
+    // обработчик доабвления пользователя в список
     class AddButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
+            // Показывать уведомления с требованием заполнить поля, если текстовое поле имя или дата пустое или содержит пробелы
             if (nameField.getText().trim().isEmpty() || birthDayField.getText().trim().isEmpty()) {
                 JOptionPane.showMessageDialog(new Frame(), "Заполни поля");
                 return;
             }
 
-            int size = listModel.getSize();
-
-
             String name = nameField.getText();
 
             Date birthDate;
             try {
+                // преобразуем текстовое поле дата рождение к реальной дате
                 birthDate = DateUtil.toDate(birthDayField.getText());
             } catch (ParseException exc) {
+                // если не получилось преобразовать поле дата к реальной дате то показывается подсказка:
+                // "Ожидаемый формат даты: 01.01.2018. Полученный формат даты 001.01.2018
                 JOptionPane.showMessageDialog(new Frame(), MessageFormat.format("Ожидаемый формат даты: {0}. Полученный формат даты: {1}", DateUtil.dateFormatExample(), birthDayField.getText()));
                 return;
             }
-            listModel.addElement(userManager.save(name, birthDate));
-            list.setSelectedIndex(size);
+
+            // Сохранение пользователя в хранилище
+            User user = userManager.save(name, birthDate);
+
+            // Добалвение пользователя с модель упределения списком чтобы он начал отображаться на панели
+            listModel.addElement(user);
         }
     }
 }
